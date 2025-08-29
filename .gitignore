@@ -1,1 +1,6 @@
 venv/
+mexc_app_env/
+*.pyc
+__pycache__/
+*.ipynb
+.pytest_cache/
