@@ -1,11 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: Infrastructure Stack
 
-Parameters:
-  DeploymentRoleArn:
-    Type: String
-    Description: The ARN of the Deployment Role
-
 Resources:
   MEXCFuturesListingNotifierS3Bucket:
     Type: AWS::S3::Bucket
