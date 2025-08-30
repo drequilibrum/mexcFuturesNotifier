@@ -20,6 +20,22 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
+                  - cloudformation:CreateStack
+                  - cloudformation:UpdateStack
+                  - cloudformation:DescribeStacks
+                  - cloudformation:DeleteStack
+                  - cloudformation:DescribeStackResource
+                  - cloudformation:DescribeStackResources
+                  - cloudformation:ListStackResources
+                  - cloudformation:GetTemplate
+                  - cloudformation:CreateChangeSet
+                  - cloudformation:DescribeChangeSet
+                  - cloudformation:ExecuteChangeSet
+                  - cloudformation:DescribeStackEvents
+                  - cloudformation:DeleteChangeSet
+                Resource: "*"
+              - Effect: Allow
+                Action:
                   - s3:*
                 Resource: "*"
               - Effect: Allow
@@ -49,8 +65,9 @@ Resources:
               - Effect: Allow
                 Action:
                   - s3:*
-                Resource: !Sub "arn:aws:s3:::mexc-futures-listing-notifier"
-                Resource: !Sub "arn:aws:s3:::mexc-futures-listing-notifier/*"
+                Resource: 
+                  - !Sub "arn:aws:s3:::mexc-futures-listing-notifier"
+                  - !Sub "arn:aws:s3:::mexc-futures-listing-notifier/*"
               - Effect: Allow
                 Action:
                   - logs:*
