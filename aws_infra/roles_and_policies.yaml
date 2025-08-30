@@ -5,7 +5,7 @@ Resources:
   DeploymentRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: DeploymentRole
+      # Removed RoleName to avoid conflicts
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -46,10 +46,11 @@ Resources:
                 Action:
                   - lambda:*
                 Resource: "*"
+
   LambdaTriggerRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: LambdaTriggerRole
+      # Removed RoleName to avoid conflicts
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -57,21 +58,22 @@ Resources:
             Principal:
               Service: lambda.amazonaws.com
             Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
       Policies:
-        - PolicyName: LambdaTriggerPolicy
+        - PolicyName: LambdaExecutionPolicy
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
               - Effect: Allow
                 Action:
-                  - s3:*
-                Resource: 
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:DeleteObject
+                  - s3:ListBucket
+                Resource:
                   - !Sub "arn:aws:s3:::mexc-futures-listing-notifier"
                   - !Sub "arn:aws:s3:::mexc-futures-listing-notifier/*"
-              - Effect: Allow
-                Action:
-                  - logs:*
-                Resource: "*"
               - Effect: Allow
                 Action:
                   - lambda:InvokeFunction
@@ -83,6 +85,7 @@ Outputs:
   DeploymentRoleArn:
     Description: The ARN of the Deployment Role
     Value: !GetAtt DeploymentRole.Arn
+      
   LambdaTriggerRoleArn:
     Description: The ARN of the Lambda Trigger Role
     Value: !GetAtt LambdaTriggerRole.Arn
