@@ -2,13 +2,9 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: Stateful Infrastructure Stack
 
 Parameters:
-  DeploymentRoleArn:
-    Type: String
-    Description: ARN of the Deployment Role
   S3BucketName:
     Type: String
     Description: Name of the S3 bucket
-    Default: mexc-futures-listing-notifier
 
 Resources:
   MEXCFuturesListingNotifierS3Bucket:
