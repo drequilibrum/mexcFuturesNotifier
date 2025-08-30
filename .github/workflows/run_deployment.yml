@@ -38,13 +38,14 @@ jobs:
             --stack-name mexc-futures-listing-notifier-roles-and-policies \
             --capabilities CAPABILITY_NAMED_IAM \
             --no-fail-on-empty-changeset
-      - name: Get Deployment Role create in previous step
+      - name: Get Deployment Role created in previous step
         id: get-role
         run: |
-          ROLE_ARN=$(aws cloudformation describe-stacks \ 
-          --stack-name mexc-futures-listing-notifier-roles-and-policies --query \
-          "Stacks[0].Outputs[?OutputKey=='DeploymentRoleArn'].OutputValue" --output text) \
-          echo "ROLE_ARN=${ROLE_ARN}" >> $GITHUB_ENV
+          role_arn=$(aws cloudformation describe-stacks \ 
+          --stack-name mexc-futures-listing-notifier-roles-and-policies \
+          --query "Stacks[0].Outputs[?OutputKey=='DeploymentRoleArn'].OutputValue" \
+          --output text)
+          echo "ROLE_ARN=$role_arn" >> $GITHUB_ENV
 
       - name: Deploy Stateful Infra
         run: |
