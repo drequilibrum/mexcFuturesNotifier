@@ -26,9 +26,46 @@ Resources:
                 Action:
                   - logs:*
                 Resource: "*"
+              - Effect: Allow
+                Action:
+                  - lambda:*
+                Resource: "*"
+  LambdaTriggerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: LambdaTriggerRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: LambdaTriggerPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:*
+                Resource: !Sub "arn:aws:s3:::mexc-futures-listing-notifier"
+                Resource: !Sub "arn:aws:s3:::mexc-futures-listing-notifier/*"
+              - Effect: Allow
+                Action:
+                  - logs:*
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - lambda:InvokeFunction
+                  - lambda:ListFunctions
+                  - lambda:GetFunction
+                Resource: "*"
 
 Outputs:
   DeploymentRoleArn:
     Description: The ARN of the Deployment Role
     Value: !GetAtt DeploymentRole.Arn
-    
+  LambdaTriggerRoleArn:
+    Description: The ARN of the Lambda Trigger Role
+    Value: !GetAtt LambdaTriggerRole.Arn
