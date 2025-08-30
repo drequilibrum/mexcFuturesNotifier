@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4 
+        uses: actions/checkout@v4
         
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -38,15 +38,17 @@ jobs:
             --stack-name mexc-futures-listing-notifier-roles-and-policies \
             --capabilities CAPABILITY_NAMED_IAM \
             --no-fail-on-empty-changeset
+            
       - name: Get Deployment Role created in previous step
         id: get-role
         run: |
-          role_arn=$(aws cloudformation describe-stacks \ 
-          --stack-name mexc-futures-listing-notifier-roles-and-policies \
-          --query "Stacks[0].Outputs[?OutputKey=='DeploymentRoleArn'].OutputValue" \
-          --output text)
-          echo "ROLE_ARN=$role_arn" >> $GITHUB_ENV
-
+          role_arn=$(aws cloudformation describe-stacks \
+            --stack-name mexc-futures-listing-notifier-roles-and-policies \
+            --query "Stacks[0].Outputs[?OutputKey=='DeploymentRoleArn'].OutputValue" \
+            --output text)
+          echo "ROLE_ARN=$role_arn" >> $GITHUB_OUTPUT
+          echo "Deployment Role ARN: $role_arn"
+          
       - name: Deploy Stateful Infra
         run: |
           aws cloudformation deploy \
@@ -54,4 +56,4 @@ jobs:
             --stack-name mexc-futures-listing-notifier-stateful-infra \
             --role-arn "${{ steps.get-role.outputs.ROLE_ARN }}" \
             --parameter-overrides \
-              S3BucketName=${{ secrets.S3_BUCKET_NAME }}
+            S3BucketName=${{ secrets.S3_BUCKET_NAME }}
